@@ -10,7 +10,7 @@ import 'package:petitparser/petitparser.dart';
 /// - Standard math functions: `sin`, `cos`, `tan`, `sqrt`, `log`, `ln`, `exp`, `pow`, etc.
 /// - Variables with optional subscripts: `x`, `v_0`, `m_1`
 /// - Scientific notation: `1.5e-10`
-/// - Mathematical constants: `pi`, `e`, `infinity`
+/// - Mathematical constants: `PI`, `EN`, `INF`
 ///
 /// Example usage:
 /// ```dart
@@ -56,18 +56,22 @@ class ExpressionGrammar extends GrammarDefinition {
   /// Handles multiplication and division (left-associative).
   Parser multiplicative() =>
       (ref0(power) &
-              (char('*').trim() & ref0(power) | char('/').trim() & ref0(power))
+              (((char('*').trim() | char('/').trim()) & ref0(power)) |
+                      ref0(power)
+                          .trim() // Implicit multiplication (handles whitespace)
+                          )
                   .star())
           .map((values) {
             math.Expression left = values[0];
             final rest = values[1] as List;
             for (final item in rest) {
-              final op = item[0] as String;
-              final right = item[1] as math.Expression;
-              if (op == '*') {
-                left = math.Times(left, right);
-              } else if (op == '/') {
-                left = math.Divide(left, right);
+              if (item is List && item.length == 2 && item[0] is String) {
+                final op = item[0] as String;
+                final right = item[1] as math.Expression;
+                if (op == '*') left = math.Times(left, right);
+                if (op == '/') left = math.Divide(left, right);
+              } else if (item is math.Expression) {
+                left = math.Times(left, item);
               }
             }
             return left;
@@ -148,11 +152,12 @@ class ExpressionGrammar extends GrammarDefinition {
           });
 
   /// Parses variable names with optional subscripts.
-  /// Also handles mathematical constants: `pi`, `e`, `infinity`.
+  /// Also handles mathematical constants: `PI`, `EN`, `INF`.
   Parser variable() => ref0(identifier).map((name) {
-    if (name == 'pi') return math.Number(dart_math.pi);
-    if (name == 'e') return math.Number(dart_math.e);
-    if (name == 'infinity') return math.Number(double.infinity);
+    if (name == 'PI') return math.Variable('PI');
+    if (name == 'EN') return math.Variable('EN');
+    if (name == 'INF') return math.Variable('INF');
+    if (name == 'i') return math.Variable('IN');
     return math.Variable(name);
   });
 

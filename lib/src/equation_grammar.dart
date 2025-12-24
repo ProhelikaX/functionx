@@ -37,19 +37,15 @@ class EquationGrammarDefinition extends GrammarDefinition {
 
   Parser multiplicative() =>
       (ref0(power) &
-              (char('*').trim() & ref0(power) | char('/').trim() & ref0(power))
-                  .star())
+              ((char('*').trim() | char('/').trim()) & ref0(power)).star())
           .map((values) {
             math.Expression left = values[0];
             final rest = values[1] as List;
             for (final item in rest) {
               final op = item[0] as String;
               final right = item[1] as math.Expression;
-              if (op == '*') {
-                left = math.Times(left, right);
-              } else if (op == '/') {
-                left = math.Divide(left, right);
-              }
+              if (op == '*') left = math.Times(left, right);
+              if (op == '/') left = math.Divide(left, right);
             }
             return left;
           });
@@ -124,9 +120,10 @@ class EquationGrammarDefinition extends GrammarDefinition {
           });
 
   Parser variable() => ref0(identifier).map((name) {
-    if (name == 'pi') return math.Number(dart_math.pi);
-    if (name == 'e') return math.Number(dart_math.e);
-    if (name == 'infinity') return math.Number(double.infinity);
+    if (name == 'PI') return math.Variable('PI');
+    if (name == 'EN') return math.Variable('EN');
+    if (name == 'INF') return math.Variable('INF');
+    if (name == 'i') return math.Variable('IN');
     return math.Variable(name);
   });
 

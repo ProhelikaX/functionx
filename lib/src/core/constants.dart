@@ -83,7 +83,17 @@ class Constants {
     name: "Euler's Number",
     unit: '',
     symbol: 'e',
-    key: 'EULER',
+    key: 'EN',
+    category: 'mathematical',
+  );
+
+  /// Imaginary Unit (i) - square root of -1
+  static const imaginaryUnit = Constant(
+    value: double.nan,
+    name: 'Imaginary Unit',
+    unit: '',
+    symbol: 'i',
+    key: 'IN',
     category: 'mathematical',
   );
 
@@ -117,7 +127,7 @@ class Constants {
     name: 'Speed of Light',
     unit: 'm/s',
     symbol: 'c',
-    key: 'SPEED_OF_LIGHT',
+    key: 'SOL',
     category: 'fundamental',
   );
 
@@ -127,7 +137,7 @@ class Constants {
     name: 'Planck Constant',
     unit: 'J⋅s',
     symbol: 'h',
-    key: 'PLANCK',
+    key: 'PC',
     category: 'fundamental',
   );
 
@@ -137,7 +147,7 @@ class Constants {
     name: 'Reduced Planck Constant',
     unit: 'J⋅s',
     symbol: 'ħ',
-    key: 'H_BAR',
+    key: 'HBAR',
     category: 'fundamental',
   );
 
@@ -147,7 +157,7 @@ class Constants {
     name: 'Gravitational Constant',
     unit: 'N⋅m²/kg²',
     symbol: 'G',
-    key: 'G',
+    key: 'GC',
     category: 'fundamental',
   );
 
@@ -161,7 +171,7 @@ class Constants {
     name: 'Elementary Charge',
     unit: 'C',
     symbol: 'e',
-    key: 'E_CHARGE',
+    key: 'EC',
     category: 'electromagnetic',
   );
 
@@ -171,7 +181,7 @@ class Constants {
     name: 'Vacuum Permittivity',
     unit: 'F/m',
     symbol: 'ε₀',
-    key: 'EPSILON_0',
+    key: 'VP',
     category: 'electromagnetic',
   );
 
@@ -181,7 +191,7 @@ class Constants {
     name: 'Vacuum Permeability',
     unit: 'H/m',
     symbol: 'μ₀',
-    key: 'MU_0',
+    key: 'VPM',
     category: 'electromagnetic',
   );
 
@@ -191,7 +201,7 @@ class Constants {
     name: 'Coulomb Constant',
     unit: 'N⋅m²/C²',
     symbol: 'k',
-    key: 'COULOMB',
+    key: 'CC',
     category: 'electromagnetic',
   );
 
@@ -205,7 +215,7 @@ class Constants {
     name: 'Electron Mass',
     unit: 'kg',
     symbol: 'mₑ',
-    key: 'M_ELECTRON',
+    key: 'ME',
     category: 'atomic',
   );
 
@@ -215,7 +225,7 @@ class Constants {
     name: 'Proton Mass',
     unit: 'kg',
     symbol: 'mₚ',
-    key: 'M_PROTON',
+    key: 'MP',
     category: 'atomic',
   );
 
@@ -225,7 +235,7 @@ class Constants {
     name: 'Neutron Mass',
     unit: 'kg',
     symbol: 'mₙ',
-    key: 'M_NEUTRON',
+    key: 'MN',
     category: 'atomic',
   );
 
@@ -235,7 +245,7 @@ class Constants {
     name: 'Bohr Radius',
     unit: 'm',
     symbol: 'a₀',
-    key: 'BOHR_RADIUS',
+    key: 'BR',
     category: 'atomic',
   );
 
@@ -245,13 +255,137 @@ class Constants {
     name: 'Fine Structure Constant',
     unit: '',
     symbol: 'α',
-    key: 'ALPHA',
+    key: 'FSC',
     category: 'atomic',
+  );
+
+  /// Rydberg constant
+  static const rydberg = Constant(
+    value: 10973731.568160,
+    name: 'Rydberg Constant',
+    unit: '1/m',
+    symbol: 'R∞',
+    key: 'RYD',
+    category: 'atomic',
+  );
+
+  /// Bohr Magneton
+  static const bohrMagneton = Constant(
+    value: 9.2740100783e-24,
+    name: 'Bohr Magneton',
+    unit: 'J/T',
+    symbol: 'μB',
+    key: 'BM',
+    category: 'atomic',
+  );
+
+  /// Nuclear Magneton
+  static const nuclearMagneton = Constant(
+    value: 5.0507837461e-27,
+    name: 'Nuclear Magneton',
+    unit: 'J/T',
+    symbol: 'μN',
+    key: 'NM',
+    category: 'atomic',
+  );
+
+  /// Proton-Electron Mass Ratio
+  static const protonElectronMassRatio = Constant(
+    value: 1836.15267343,
+    name: 'Proton-Electron Mass Ratio',
+    unit: '',
+    symbol: 'mp/me',
+    key: 'PEM',
+    category: 'atomic',
+  );
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ELECTRO-CHEMICAL & QUANTUM CONSTANTS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Faraday constant
+  static const faraday = Constant(
+    value: 96485.33212,
+    name: 'Faraday Constant',
+    unit: 'C/mol',
+    symbol: 'F',
+    key: 'FC',
+    category: 'electrochemical',
+  );
+
+  /// Magnetic flux quantum
+  static const magneticFluxQuantum = Constant(
+    value: 2.067833848e-15,
+    name: 'Magnetic Flux Quantum',
+    unit: 'Wb',
+    symbol: 'Φ₀',
+    key: 'MFQ',
+    category: 'quantum',
+  );
+
+  /// Conductance quantum
+  static const conductanceQuantum = Constant(
+    value: 7.748091729e-5,
+    name: 'Conductance Quantum',
+    unit: 'S',
+    symbol: 'G₀',
+    key: 'CQ',
+    category: 'quantum',
+  );
+
+  /// Josephson constant
+  static const josephson = Constant(
+    value: 483597.8484e9,
+    name: 'Josephson Constant',
+    unit: 'Hz/V',
+    symbol: 'KJ',
+    key: 'JC',
+    category: 'quantum',
+  );
+
+  /// Von Klitzing constant
+  static const vonKlitzing = Constant(
+    value: 25812.8074593043,
+    name: 'Von Klitzing Constant',
+    unit: 'Ω',
+    symbol: 'RK',
+    key: 'VK',
+    category: 'quantum',
   );
 
   // ═══════════════════════════════════════════════════════════════════════════
   // THERMODYNAMIC CONSTANTS
   // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Wien displacement law constant
+  static const wienDisplacement = Constant(
+    value: 2.897771955e-3,
+    name: 'Wien Displacement Constant',
+    unit: 'm⋅K',
+    symbol: 'b',
+    key: 'WIE',
+    category: 'thermodynamic',
+  );
+
+  /// First radiation constant
+  static const firstRadiation = Constant(
+    value: 3.741771852e-16,
+    name: 'First Radiation Constant',
+    unit: 'W⋅m²',
+    symbol: 'c₁',
+    key: 'C1',
+    category: 'thermodynamic',
+  );
+
+  /// Second radiation constant
+  static const secondRadiation = Constant(
+    value: 1.438776877e-2,
+    name: 'Second Radiation Constant',
+    unit: 'm⋅K',
+    symbol: 'c₂',
+    key: 'C2',
+    category: 'thermodynamic',
+  );
 
   /// Boltzmann constant
   static const boltzmann = Constant(
@@ -259,7 +393,7 @@ class Constants {
     name: 'Boltzmann Constant',
     unit: 'J/K',
     symbol: 'kB',
-    key: 'K_B',
+    key: 'BC',
     category: 'thermodynamic',
   );
 
@@ -269,7 +403,7 @@ class Constants {
     name: 'Avogadro Number',
     unit: '1/mol',
     symbol: 'NA',
-    key: 'N_A',
+    key: 'AN',
     category: 'thermodynamic',
   );
 
@@ -279,7 +413,7 @@ class Constants {
     name: 'Gas Constant',
     unit: 'J/(mol⋅K)',
     symbol: 'R',
-    key: 'R_GAS',
+    key: 'RG',
     category: 'thermodynamic',
   );
 
@@ -299,7 +433,7 @@ class Constants {
     name: 'Stefan-Boltzmann Constant',
     unit: 'W/(m²⋅K⁴)',
     symbol: 'σ',
-    key: 'STEFAN_BOLTZMANN',
+    key: 'SBC',
     category: 'thermodynamic',
   );
 
@@ -313,7 +447,7 @@ class Constants {
     name: 'Standard Gravity',
     unit: 'm/s²',
     symbol: 'g',
-    key: 'G_EARTH',
+    key: 'SG',
     category: 'earth',
   );
 
@@ -323,7 +457,7 @@ class Constants {
     name: 'Earth Mass',
     unit: 'kg',
     symbol: 'M⊕',
-    key: 'M_EARTH',
+    key: 'EM',
     category: 'earth',
   );
 
@@ -333,7 +467,7 @@ class Constants {
     name: 'Earth Radius',
     unit: 'm',
     symbol: 'R⊕',
-    key: 'R_EARTH',
+    key: 'ER',
     category: 'earth',
   );
 
@@ -343,7 +477,7 @@ class Constants {
     name: 'Sun Mass',
     unit: 'kg',
     symbol: 'M☉',
-    key: 'M_SUN',
+    key: 'SM',
     category: 'celestial',
   );
 
@@ -353,7 +487,7 @@ class Constants {
     name: 'Sun Radius',
     unit: 'm',
     symbol: 'R☉',
-    key: 'R_SUN',
+    key: 'SR',
     category: 'celestial',
   );
 
@@ -373,7 +507,7 @@ class Constants {
     name: 'Light Year',
     unit: 'm',
     symbol: 'ly',
-    key: 'LIGHT_YEAR',
+    key: 'LY',
     category: 'celestial',
   );
 
@@ -385,39 +519,53 @@ class Constants {
   static const Map<String, Constant> all = {
     // Mathematical
     'PI': pi,
-    'EULER': e,
+    'EN': e,
+    'IN': imaginaryUnit,
     'PHI': goldenRatio,
     'SQRT2': sqrt2,
     // Fundamental
-    'SPEED_OF_LIGHT': speedOfLight,
-    'PLANCK': planck,
-    'H_BAR': hBar,
-    'G': gravitationalConstant,
+    'SOL': speedOfLight,
+    'PC': planck,
+    'HBAR': hBar,
+    'GC': gravitationalConstant,
     // Electromagnetic
-    'E_CHARGE': elementaryCharge,
-    'EPSILON_0': vacuumPermittivity,
-    'MU_0': vacuumPermeability,
-    'COULOMB': coulomb,
+    'EC': elementaryCharge,
+    'VP': vacuumPermittivity,
+    'VPM': vacuumPermeability,
+    'CC': coulomb,
     // Atomic
-    'M_ELECTRON': electronMass,
-    'M_PROTON': protonMass,
-    'M_NEUTRON': neutronMass,
-    'BOHR_RADIUS': bohrRadius,
-    'ALPHA': fineStructure,
+    'ME': electronMass,
+    'MP': protonMass,
+    'MN': neutronMass,
+    'BR': bohrRadius,
+    'FSC': fineStructure,
+    'RYD': rydberg,
+    'BM': bohrMagneton,
+    'NM': nuclearMagneton,
+    'PEM': protonElectronMassRatio,
+    // Electrochemical & Quantum
+    'FC': faraday,
+    'MFQ': magneticFluxQuantum,
+    'CQ': conductanceQuantum,
+    'JC': josephson,
+    'VK': vonKlitzing,
     // Thermodynamic
-    'K_B': boltzmann,
-    'N_A': avogadro,
-    'R_GAS': gasConstant,
+    'BC': boltzmann,
+    'AN': avogadro,
+    'RG': gasConstant,
     'ATM': standardAtmosphere,
-    'STEFAN_BOLTZMANN': stefanBoltzmann,
+    'SBC': stefanBoltzmann,
+    'WIE': wienDisplacement,
+    'C1': firstRadiation,
+    'C2': secondRadiation,
     // Earth & Celestial
-    'G_EARTH': standardGravity,
-    'M_EARTH': earthMass,
-    'R_EARTH': earthRadius,
-    'M_SUN': sunMass,
-    'R_SUN': sunRadius,
+    'SG': standardGravity,
+    'EM': earthMass,
+    'ER': earthRadius,
+    'SM': sunMass,
+    'SR': sunRadius,
     'AU': astronomicalUnit,
-    'LIGHT_YEAR': lightYear,
+    'LY': lightYear,
   };
 
   /// Gets a constant by its key.

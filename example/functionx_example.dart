@@ -56,7 +56,7 @@ void main() {
   // 7. Trig Functions
   print('7. Trigonometric Functions');
   print('-' * 40);
-  final trigResult = Evaluator.evaluateNumeric('sin(pi/2)');
+  final trigResult = Evaluator.evaluateNumeric('sin(PI/2)');
   print('sin(π/2) = $trigResult');
   final cosResult = Evaluator.evaluateNumeric('cos(0)');
   print('cos(0) = $cosResult');

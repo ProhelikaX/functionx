@@ -80,12 +80,12 @@ class ExpressionParser {
   /// Extracts all variable names from an expression or equation.
   ///
   /// Returns a sorted list of unique variable names.
-  /// Mathematical constants (`pi`, `e`, `infinity`) are not included.
+  /// Mathematical constants (`PI`, `EN`, `INF`) are not included.
   ///
   /// Example:
   /// ```dart
   /// ExpressionParser.extractVariables('F = m*a'); // ['F', 'a', 'm']
-  /// ExpressionParser.extractVariables('y = sin(x) + 2*pi'); // ['x', 'y']
+  /// ExpressionParser.extractVariables('y = sin(x) + 2*PI'); // ['x', 'y']
   /// ```
   static List<String> extractVariables(String input) {
     try {
@@ -94,47 +94,69 @@ class ExpressionParser {
 
       final variables = <String>{};
 
+      final visited = <dynamic>{};
       void collect(dynamic node) {
         if (node == null) return;
+        if (visited.contains(node)) return;
+        visited.add(node);
 
-        if (node is math.Variable) {
-          // Ignore placeholder variables
-          if (node.name == 'anon') return;
-          variables.add(node.name);
-          return;
-        }
-
-        if (node is math.Number) return;
-
-        if (node is math.BinaryOperator) {
-          collect(node.first);
-          collect(node.second);
-          return;
-        }
-
-        if (node is math.UnaryOperator) {
-          try {
-            collect((node as dynamic).value);
-          } catch (_) {}
-          return;
-        }
-
-        // Handle functions (Sin, Cos, etc.)
         try {
-          final args = (node as dynamic).args;
-          if (args is List) {
-            for (var arg in args) {
-              collect(arg);
+          if (node is math.Variable) {
+            // 'anon' is used for bound variables that wrap expressions; we must descend into them.
+            if (node.name != 'anon') {
+              variables.add(node.name);
             }
-            return;
           }
         } catch (_) {}
 
+        if (node is math.Number) return;
+
+        // Try 'args' first as it covers Functions and often Operators
         try {
-          final arg = (node as dynamic).arg;
-          if (arg != null) {
-            collect(arg);
-            return;
+          final args = (node as dynamic).args;
+          if (args is List && args.isNotEmpty) {
+            for (var a in args) collect(a);
+            // Don't return!
+          }
+        } catch (_) {}
+
+        // Fallback: Exhaustive property search for children
+        try {
+          collect((node as dynamic).first);
+        } catch (_) {}
+        try {
+          collect((node as dynamic).second);
+        } catch (_) {}
+        try {
+          collect((node as dynamic).arg);
+        } catch (_) {}
+        try {
+          collect((node as dynamic).exp);
+        } catch (_) {}
+        try {
+          collect((node as dynamic).expression);
+        } catch (_) {}
+        try {
+          collect((node as dynamic).value);
+        } catch (_) {}
+        try {
+          collect((node as dynamic).base);
+        } catch (_) {}
+        try {
+          collect((node as dynamic).left);
+        } catch (_) {}
+        try {
+          collect((node as dynamic).right);
+        } catch (_) {}
+
+        // Hack for BoundVariable which hides contents in toString
+        try {
+          final str = node.toString();
+          if (str.startsWith('{') && str.endsWith('}')) {
+            final inner = str.substring(1, str.length - 1);
+            if (inner.trim().isNotEmpty && inner != 'anon') {
+              variables.addAll(ExpressionParser.extractVariables(inner));
+            }
           }
         } catch (_) {}
       }

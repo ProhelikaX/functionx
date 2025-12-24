@@ -1,0 +1,29 @@
+# https://dart.dev/guides/libraries/private-files
+
+# Files and directories created by pub
+.dart_tool/
+.packages
+.pub/
+build/
+
+# If you're building a package, you might want to ignore pubspec.lock
+# pubspec.lock
+
+# Android-specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.settings/
+.classpath
+
+# Windows-specific files
+*.exe
+*.dll
+*.pdb
+*.exp
+*.lib
+
+# Max-specific files
+.DS_Store

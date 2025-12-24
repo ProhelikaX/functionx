@@ -7,12 +7,13 @@ A powerful equation parser and solver for Dart — f(x) for your code.
 
 ## Features
 
-- 🧮 **Expression Parsing** - Parse mathematical expressions with explicit operators
-- 📊 **Variable Extraction** - Extract all variables from an expression
-- 🔢 **Expression Evaluation** - Evaluate expressions with variable substitution
-- ⚡ **Equation Solving** - Solve equations algebraically and numerically
-- 📈 **Symbolic Calculus** - Differentiation and integration (CAS)
-- 🔬 **Physical Constants** - Comprehensive collection of physics and math constants
+- 🧮 **Expression Parsing** - Support for both explicit and implicit multiplication
+- 📊 **Variable Extraction** - Intelligently extract variables while filtering constants
+- 🔢 **Expression Evaluation** - Multi-mode evaluation (Real, Complex, and Mixed)
+- ⚡ **Equation Solving** - High-precision algebraic and numerical solvers
+- 📈 **Symbolic Calculus** - Fast differentiation and integration
+- 🔬 **Auto-resolve Constants** - Automatic identification of symbols like $c$, $h$, and $k_B$
+- 🇬🇷 **LaTeX Support** - Seamless parsing of Greek letters and complex subscripts
 
 ## Installation
 
@@ -20,7 +21,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  functionx: ^2.0.0
+  functionx: ^1.1.0
 ```
 
 ## Quick Start
@@ -57,13 +58,16 @@ void main() {
 
 ## Expression Syntax
 
-This parser uses **explicit operator notation**:
+This parser is designed to be ergonomic, supporting both **explicit** and **implicit** (shorthand) notation:
 
-| ✅ Correct | ❌ Incorrect |
-|-----------|-------------|
-| `2*x + 3` | `2x + 3` |
-| `a*b*c` | `abc` |
-| `sin(x)^2` | `sin^2(x)` |
+| ✅ Notation | 📝 Example |
+|-------------|------------|
+| Explicit | `2*x + 3*y` |
+| Implicit | `2x + 3y` |
+| Parentheses | `3(x+1)(x-1)` |
+| Complex | `(1+i)i` |
+| Greek | `\Delta E = h*\nu` |
+| Subscripts | `x_1 + x_2` |
 
 ### Supported Operators
 
@@ -96,9 +100,20 @@ This parser uses **explicit operator notation**:
 
 | Constant | Value |
 |----------|-------|
-| `pi` | 3.14159... |
-| `e` | 2.71828... |
-| `infinity` | ∞ |
+| `PI` | 3.14159... |
+| `EN` | 2.71828... |
+| `INF` | ∞ |
+| `IN` | i (√-1) |
+
+### Reserved Words & Aliases
+
+To avoid conflicts with physical constants (like $c$ for the speed of light vs $c$ for a variable), `functionx` uses a set of reserved ergonomic aliases. These words are protected and will be pre-filled or handled as functions/constants:
+
+- **Functions**: `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sqrt`, `abs`, `log`, `ln`, `exp`, `pow`
+- **Math Constants**: `PI`, `EN`, `INF`, `IN` (Uppercase required to avoid variable collisions)
+- **Ergonomic Aliases**: `SOL`, `GC`, `PC`, `BC`, `EC`, `RG`, `SG`, `EN`, `EM`/`ER`, `SM`/`SR`, `CC`, `ME`, `MP`, `MN`, `BR`, `FSC`, `SBC`, `LY`, `RYD`, `BM`, `NM`, `PEM`, `FC`, `MFQ`, `CQ`, `JC`, `VK`, `WIE`, `C1`, `C2` (Case-insensitive)
+
+*Note: `functionx` is smart enough to recognize both symbols (like π, ∞, h) and their designated keys. It automatically filters these during variable extraction so they don't appear as "unknowns" in your UI.*
 
 ## API Reference
 
@@ -175,7 +190,7 @@ print(c.unit);   // m/s
 print(c.name);   // Speed of Light
 
 // Get by key
-final g = Constants.get('G');
+final g = Constants.get('GC');
 print(g?.value); // 6.6743e-11
 
 // List all constants in a category
@@ -189,11 +204,13 @@ final results = Constants.search('mass');
 
 | Category | Examples |
 |----------|----------|
-| `mathematical` | π, e, φ (golden ratio), √2 |
+| `mathematical` | π, e, φ (golden ratio), √2, i |
 | `fundamental` | Speed of light, Planck constant, Gravitational constant |
 | `electromagnetic` | Elementary charge, Vacuum permittivity, Coulomb constant |
-| `atomic` | Electron mass, Proton mass, Bohr radius, Fine structure constant |
-| `thermodynamic` | Boltzmann constant, Gas constant, Avogadro number |
+| `atomic` | Electron/Proton mass, Bohr radius, Fine structure, Rydberg |
+| `thermodynamic` | Boltzmann const, Gas constant, Radiation constants |
+| `quantum` | Magnetic Flux Quantum, Conductance Quantum, Josephson |
+| `electrochemical` | Faraday constant |
 | `earth` | Standard gravity, Earth mass, Earth radius |
 | `celestial` | Sun mass, Astronomical unit, Light year |
 
@@ -201,15 +218,19 @@ final results = Constants.search('mass');
 
 | Property | Key | Symbol | Value |
 |----------|-----|--------|-------|
-| `Constants.speedOfLight` | `SPEED_OF_LIGHT` | c | 299792458 m/s |
-| `Constants.planck` | `PLANCK` | h | 6.626e-34 J⋅s |
-| `Constants.gravitationalConstant` | `G` | G | 6.674e-11 N⋅m²/kg² |
-| `Constants.boltzmann` | `K_B` | kB | 1.381e-23 J/K |
-| `Constants.avogadro` | `N_A` | NA | 6.022e23 1/mol |
-| `Constants.standardGravity` | `G_EARTH` | g | 9.807 m/s² |
-| `Constants.elementaryCharge` | `E_CHARGE` | e | 1.602e-19 C |
+| `Constants.speedOfLight` | `SOL` | c | 299792458 m/s |
+| `Constants.planck` | `PC` | h | 6.626e-34 J⋅s |
+| `Constants.gravitationalConstant` | `GC` | G | 6.674e-11 N⋅m²/kg² |
+| `Constants.boltzmann` | `BC` | kB | 1.381e-23 J/K |
+| `Constants.avogadro` | `AN` | NA | 6.022e23 1/mol |
+| `Constants.faraday` | `FC` | F | 96485 C/mol |
+| `Constants.rydberg` | `RYD` | R∞ | 1.097e7 1/m |
+| `Constants.standardGravity` | `SG` | g | 9.807 m/s² |
+| `Constants.elementaryCharge` | `EC` | e | 1.602e-19 C |
+| `Constants.coulomb` | `CC` | k | 8.988e9 N⋅m²/C² |
 | `Constants.pi` | `PI` | π | 3.14159... |
-| `Constants.e` | `EULER` | e | 2.71828... |
+| `Constants.e` | `EN` | e | 2.71828... |
+| `Constants.imaginaryUnit` | `IN` | i | √-1 |
 
 ## License
 

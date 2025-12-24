@@ -1,10 +1,11 @@
 import 'evaluator.dart';
 import 'parser.dart';
+import 'complex.dart';
 
 /// Result of solving an equation.
 class SolveResult {
-  /// The computed value of the solved variable.
-  final double value;
+  /// The computed value of the solved variable (double or Complex).
+  final dynamic value;
 
   /// The name of the variable that was solved.
   final String variable;
@@ -30,10 +31,10 @@ class SolveResult {
   });
 
   const SolveResult.error(this.error)
-      : value = double.nan,
-        variable = '',
-        steps = const [],
-        isNumeric = false;
+    : value = double.nan,
+      variable = '',
+      steps = const [],
+      isNumeric = false;
 
   @override
   String toString() {
@@ -45,17 +46,6 @@ class SolveResult {
 /// Solves equations for unknown variables.
 ///
 /// Supports both algebraic (symbolic) and numerical solving methods.
-///
-/// Example usage:
-/// ```dart
-/// // Solve for x in: 2*x + 3 = 7
-/// final result = Solver.solve('2*x + 3 = 7', {'x': null});
-/// print(result.value); // 2.0
-///
-/// // Solve physics equation
-/// final result = Solver.solve('F = m*a', {'F': 10, 'm': 2}, solveFor: 'a');
-/// print(result.value); // 5.0
-/// ```
 class Solver {
   /// Solves an equation for the unknown variable.
   ///
@@ -66,7 +56,7 @@ class Solver {
   /// Returns a [SolveResult] with the solution.
   static SolveResult solve(
     String equation,
-    Map<String, double?> values, {
+    Map<String, dynamic> values, {
     String? solveFor,
   }) {
     try {
@@ -94,7 +84,7 @@ class Solver {
       }
 
       // Convert nullable map to non-nullable (filter out nulls)
-      final knownValues = <String, double>{};
+      final knownValues = <String, dynamic>{};
       for (final entry in values.entries) {
         if (entry.value != null) {
           knownValues[entry.key] = entry.value!;
@@ -133,14 +123,14 @@ class Solver {
     String leftExpr,
     String rightExpr,
     String variable,
-    Map<String, double> values,
+    Map<String, dynamic> values,
   ) {
     final steps = <String>[];
 
     // Check if variable is isolated on left side
     if (leftExpr.trim() == variable) {
       try {
-        final result = Evaluator.evaluate(rightExpr, values);
+        final result = Evaluator.evaluateMixed(rightExpr, values);
         steps.add('$variable = $rightExpr');
         steps.add('$variable = ${_formatValue(result)}');
         return SolveResult(
@@ -155,7 +145,7 @@ class Solver {
     // Check if variable is isolated on right side
     if (rightExpr.trim() == variable) {
       try {
-        final result = Evaluator.evaluate(leftExpr, values);
+        final result = Evaluator.evaluateMixed(leftExpr, values);
         steps.add('$leftExpr = $variable');
         steps.add('${_formatValue(result)} = $variable');
         return SolveResult(
@@ -176,10 +166,10 @@ class Solver {
     String leftExpr,
     String rightExpr,
     String variable,
-    Map<String, double> values,
+    Map<String, dynamic> values,
   ) {
     double f(double x) {
-      final testValues = Map<String, double>.from(values);
+      final testValues = Map<String, dynamic>.from(values);
       testValues[variable] = x;
       final leftVal = Evaluator.evaluate(leftExpr, testValues);
       final rightVal = Evaluator.evaluate(rightExpr, testValues);
@@ -292,13 +282,21 @@ class Solver {
   }
 
   /// Formats a numeric value for display.
-  static String _formatValue(double value) {
-    if (value == value.roundToDouble() && value.abs() < 1e10) {
-      return value.toInt().toString();
+  static String _formatValue(dynamic value) {
+    if (value is Complex) {
+      return value.toString();
     }
-    if (value.abs() < 1e-6 || value.abs() > 1e10) {
-      return value.toStringAsExponential(6);
+    if (value is double) {
+      if (value.isNaN) return 'NaN';
+      if (value.isInfinite) return 'Infinity';
+      if (value == value.roundToDouble() && value.abs() < 1e10) {
+        return value.toInt().toString();
+      }
+      if (value.abs() < 1e-6 && value != 0) {
+        return value.toStringAsExponential(6);
+      }
+      return value.toStringAsFixed(6).replaceAll(RegExp(r'\.?0+$'), '');
     }
-    return value.toStringAsFixed(6).replaceAll(RegExp(r'\.?0+$'), '');
+    return value.toString();
   }
 }
