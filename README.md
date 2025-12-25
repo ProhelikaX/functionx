@@ -7,7 +7,7 @@ A powerful equation parser and solver for Dart — f(x) for your code.
 
 ## Features
 
-- 🧮 **Expression Parsing** - Support for both explicit and implicit multiplication
+- 🧮 **Expression Parsing** - Strictly explicit parsing (e.g. `2*x`, `m*a`) for maximum predictability
 - 📊 **Variable Extraction** - Intelligently extract variables while filtering constants
 - 🔢 **Expression Evaluation** - Multi-mode evaluation (Real, Complex, and Mixed)
 - ⚡ **Equation Solving** - High-precision algebraic and numerical solvers
@@ -21,7 +21,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  functionx: ^1.1.0
+  functionx: ^1.2.0
 ```
 
 ## Quick Start
@@ -58,13 +58,12 @@ void main() {
 
 ## Expression Syntax
 
-This parser is designed to be ergonomic, supporting both **explicit** and **implicit** (shorthand) notation:
+This parser is designed to be ergonomic but **strictly explicit**:
 
 | ✅ Notation | 📝 Example |
 |-------------|------------|
 | Explicit | `2*x + 3*y` |
-| Implicit | `2x + 3y` |
-| Parentheses | `3(x+1)(x-1)` |
+| Parentheses | `3*(x+1)*(x-1)` |
 | Complex | `(1+i)i` |
 | Greek | `\Delta E = h*\nu` |
 | Subscripts | `x_1 + x_2` |
@@ -107,13 +106,14 @@ This parser is designed to be ergonomic, supporting both **explicit** and **impl
 
 ### Reserved Words & Aliases
 
-To avoid conflicts with physical constants (like $c$ for the speed of light vs $c$ for a variable), `functionx` uses a set of reserved ergonomic aliases. These words are protected and will be pre-filled or handled as functions/constants:
+To avoid ambiguity (like $c$ for the speed of light vs $c$ for a variable), `functionx` uses **Strict Constant Lookup**.
+You MUST use these specific keys if you want the parser to auto-resolve constants. Common symbols like `c`, `g`, `h` are treated as plain variables.
 
 - **Functions**: `sin`, `cos`, `tan`, `asin`, `acos`, `atan`, `sqrt`, `abs`, `log`, `ln`, `exp`, `pow`
-- **Math Constants**: `PI`, `EN`, `INF`, `IN` (Uppercase required to avoid variable collisions)
-- **Ergonomic Aliases**: `SOL`, `GC`, `PC`, `BC`, `EC`, `RG`, `SG`, `EN`, `EM`/`ER`, `SM`/`SR`, `CC`, `ME`, `MP`, `MN`, `BR`, `FSC`, `SBC`, `LY`, `RYD`, `BM`, `NM`, `PEM`, `FC`, `MFQ`, `CQ`, `JC`, `VK`, `WIE`, `C1`, `C2` (Case-insensitive)
+- **Math Constants**: `PI`, `EN`, `INF`, `IN`
+- **Natural Constants (Keys)**: `SOL` (Speed of Light), `GC` (Gravitational), `PC` (Planck), `SG` (Standard Gravity), `NA` (Avogadro), etc.
 
-*Note: `functionx` is smart enough to recognize both symbols (like π, ∞, h) and their designated keys. It automatically filters these during variable extraction so they don't appear as "unknowns" in your UI.*
+*Note: You must explicitly use `SOL` (or `speed_of_light`) to get the constant $c$. Uses of `c` will just be the variable $c$.*
 
 ## API Reference
 

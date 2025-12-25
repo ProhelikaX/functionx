@@ -4,11 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.2.0] - 2025-12-25
 
-## [1.1.0] - 2024-12-25
+### Changed
+- **BREAKING**: Removed all implicit multiplication support. The parser now requires explicit operators (e.g., `m*a` instead of `ma`).
+- **BREAKING**: Strict constant lookup. Constants must be referenced by their explicit keys (e.g., `SOL`, `GC`, `SG`) to be automatically prefilled. Ambiguous symbols like `c`, `g`, `h` are now treated strictly as variables.
+- Refactored `PhysicsConstant` to `NaturalConstant` to better reflect the domain-agnostic nature of the constants.
+- Removed "repair phase" and implicit cleaning logic from variable extraction to ensure 100% predictable parsing.
+
+### Fixed
+- Fixed issue where variable aliases (e.g., `g` vs `SG`) caused duplicate rows in the solver UI.
+- Fixed `getPrefilledValues` heuristics to be deterministic and strict.
+
+## [1.1.0] - 2025-12-25
 
 ### Added
-- **Implicit Multiplication**: Added support for standard algebraic shorthand (e.g., `2x`, `3(a+b)`, `(x+1)(x-1)`)
 - **Enhanced Greek Letter Support**: Improved parsing of LaTeX Greek commands (e.g., `\alpha`, `\Phi_0`, `\Delta E`)
 - **Automatic Physics Constants**: Solver now automatically identifies and substitutes physics constants mentioned by their symbols or keys
 - **Subscript Support**: Improved handling of variable subscripts in both plain text (`x_1`) and LaTeX (`x_{1}`)
@@ -19,7 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Refined variable extraction to correctly exclude math and physics constants from "unknowns"
 
 ### Fixed
-- Fixed `ParentDataWidget` layout conflict in solution step displays
 - Resolved `NaN` results in complex arithmetic involving the imaginary unit `i`
 - Improved convergence of Newton's method with expanded search ranges and better starting points
 

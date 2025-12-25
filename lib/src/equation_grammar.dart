@@ -7,9 +7,11 @@ class EquationGrammarDefinition extends GrammarDefinition {
   @override
   Parser start() => (ref0(equation) | ref0(expression)).end();
 
-  // Returns [math.Expression left, =, math.Expression right]
+  // Returns [math.Expression left, [=, math.Expression right]...]
   Parser equation() =>
-      (ref0(expression) & char('=').trim() & ref0(expression)).map((values) {
+      (ref0(expression) & (char('=').trim() & ref0(expression)).plus()).map((
+        values,
+      ) {
         return values;
       });
 
@@ -114,6 +116,10 @@ class EquationGrammarDefinition extends GrammarDefinition {
                 return math.Power(math.Number(dart_math.e), args[0]);
               case 'pow':
                 return math.Power(args[0], args[1]);
+              case 'lim':
+                // For limits, we focus on the expression being limited
+                // Usually lim(expression, variable, target) or just lim(expression)
+                return args[0];
               default:
                 throw FormatException('Unknown function: $name');
             }

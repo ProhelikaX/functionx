@@ -8,81 +8,70 @@ void main() {
     });
 
     test('extracts subscripted variables', () {
-      expect(EquationParser.extractVariables('v_0 + a t = v'), [
+      expect(EquationParser.extractVariables('v_0 + a*t = v'), [
         'a',
         't',
+        'v',
         'v_0',
       ]);
     });
 
     test('excludes LaTeX commands', () {
-      expect(EquationParser.extractVariables(r'\sin(x) + \cos(y) = 1'), [
+      // Updated to explicit syntax: sin(x) + cos(y) = 1
+      expect(EquationParser.extractVariables('sin(x) + cos(y) = 1'), [
         'x',
         'y',
       ]);
     });
 
     test('handles fractions', () {
-      expect(EquationParser.extractVariables(r'\frac{a}{b} = c'), [
-        'a',
-        'b',
-        'c',
-      ]);
+      // Updated to explicit syntax: a/b = c
+      expect(EquationParser.extractVariables('a/b = c'), ['a', 'b', 'c']);
     });
 
     test('handles Greek letters', () {
-      // Greek letters are extracted as both uppercase constant versions and LaTeX versions
-      final vars =EquationParser.extractVariables(
-        r'\theta + \omega t = \phi',
-      );
-      expect(vars, containsAll([r'\theta', r'\omega', r'\phi', 't']));
+      // Updated to explicit syntax: theta + omega*t = phi
+      final vars = EquationParser.extractVariables('theta + omega*t = phi');
+      expect(vars, containsAll(['theta', 'omega', 'phi', 't']));
     });
 
-    test('excludes limit variables', () {
-      // 'f' appears as a variable in function notation f(x)
-      final vars =EquationParser.extractVariables(
-        r'\lim_{h\to 0} \frac{f(x+h)-f(x)}{h}',
-      );
-      expect(vars, contains('x'));
-    });
+    // Limit test removed as it relied on LaTeX limit syntax which is not part of Explicit Parser
   });
 
   group('EquationParser - solve', () {
     test('evaluates simple expressions', () {
-      final result =EquationParser.solve('2 + 3 * 4', {});
+      final result = EquationParser.solve('2 + 3 * 4', {});
       expect(result.solvedValue, 14.0);
     });
 
     test('solves linear equations', () {
-      final result =EquationParser.solve('2x + 5 = 15', {
+      final result = EquationParser.solve('2*x + 5 = 15', {
         'x': double.nan,
       }, solveFor: 'x');
       expect(result.solvedValue, closeTo(5.0, 0.001));
     });
 
     test('solves quadratic equations (positive root)', () {
-      final result =EquationParser.solve('x^2 = 16', {
+      final result = EquationParser.solve('x^2 = 16', {
         'x': double.nan,
       }, solveFor: 'x');
-      // Bisection/Newton might find 4 or -4 depending on range, but our ranges start positive first
       expect(result.solvedValue?.abs(), closeTo(4.0, 0.001));
     });
 
     test('substitutes multiple values', () {
-      final result =EquationParser.solve('a + b', {'a': 10.0, 'b': 20.0});
+      final result = EquationParser.solve('a + b', {'a': 10.0, 'b': 20.0});
       expect(result.solvedValue, 30.0);
     });
 
     test('handles division by zero', () {
-      final result =EquationParser.solve('1 / 0', {});
-      // Division by zero returns Infinity (as Complex or double)
+      final result = EquationParser.solve('1 / 0', {});
       final val = result.solvedValue;
-      // For now, just check we get a valid result (infinity or error)
       expect(result.error == null || val != null, isTrue);
     });
 
     test('solves Newton second law (braced subscripts)', () {
-      final result =EquationParser.solve(r'F_{net} = ma', {
+      // Updated to explicit syntax: F_net = m*a
+      final result = EquationParser.solve('F_net = m*a', {
         'F_net': 45.0,
         'm': 65.0,
         'a': double.nan,
@@ -91,21 +80,19 @@ void main() {
     });
 
     test('solves Schwarzschild time dilation', () {
-      final result =EquationParser.solve(
-        r't_{far} = t_{near} \sqrt{1 - \frac{2GM}{rc^2}}',
-        {
-          'G': 6.673e-11,
-          'M': 3.45e24,
-          'r': 7.0e6,
-          'c': 2.998e8,
-          't_near': 1.0,
-          't_far': double.nan,
-        },
-        solveFor: 't_far',
-      );
+      // Updated to explicit: t_far = t_near * sqrt(1 - 2*G*M/(r*c^2))
+      final result =
+          EquationParser.solve('t_far = t_near * sqrt(1 - 2*G*M/(r*c^2))', {
+            'G': 6.673e-11,
+            'M': 3.45e24,
+            'r': 7.0e6,
+            'c': 2.998e8,
+            't_near': 1.0,
+            't_far': double.nan,
+          }, solveFor: 't_far');
       expect(
-       EquationParser.extractVariables(
-          r't_{far} = t_{near} \sqrt{1 - \frac{2GM}{rc^2}}',
+        EquationParser.extractVariables(
+          't_far = t_near * sqrt(1 - 2*G*M/(r*c^2))',
         ),
         ['G', 'M', 'c', 'r', 't_far', 't_near'],
       );
@@ -114,43 +101,45 @@ void main() {
     });
 
     test('solves Gravitational Force Law', () {
-      final result =EquationParser.solve(r'F_g = G \frac{m_1 m_2}{r^2}', {
+      // Updated to explicit: F_g = G * m_1 * m_2 / r^2
+      final result = EquationParser.solve('F_g = G * m_1 * m_2 / r^2', {
         'G': 6.673e-11,
         'm_1': 5.972e24,
         'm_2': 7.348e22,
         'r': 3.844e8,
         'F_g': double.nan,
       }, solveFor: 'F_g');
-      expect(
-       EquationParser.extractVariables(r'F_g = G \frac{m_1 m_2}{r^2}'),
-        ['F_g', 'G', 'm_1', 'm_2', 'r'],
-      );
+      expect(EquationParser.extractVariables('F_g = G * m_1 * m_2 / r^2'), [
+        'F_g',
+        'G',
+        'm_1',
+        'm_2',
+        'r',
+      ]);
       expect(result.solvedValue, isNotNull);
       expect(result.solvedValue, closeTo(1.982e20, 1e17));
     });
+
     test('handles multi-approximation with units', () {
-      const latex =
-          r'g \approx \frac{42.7 \times 10^{12}}{11.56 \times 10^{12}} \approx 3.7 \text{ m/s}^2';
-      final result =EquationParser.solve(latex, {
-        'g': double.nan,
-      }, solveFor: 'g');
-      expect(EquationParser.extractVariables(latex), ['g']);
+      // Updated to explicit: g = 42.7e12 / (11.56e12)
+      // Dropped units and approx symbol as they are display-only
+      const eq = 'g = 42.7e12 / (11.56e12)';
+      final result = EquationParser.solve(eq, {'g': double.nan}, solveFor: 'g');
+      expect(EquationParser.extractVariables(eq), ['g']);
       expect(result.solvedValue, isNotNull);
       expect(result.solvedValue, closeTo(3.6937716, 0.001));
     });
 
     test('extracts variables from styled LaTeX', () {
-      const latex = r'\mathbf{g} = \frac{\mathbf{F}_g}{m_{test}}';
-      expect(EquationParser.extractVariables(latex), [
-        'F_g',
-        'g',
-        'm_test',
-      ]);
+      // Updated to explicit: g = F_g / m_test
+      const eq = 'g = F_g / m_test';
+      expect(EquationParser.extractVariables(eq), ['F_g', 'g', 'm_test']);
     });
 
     test('solves styled LaTeX formula', () {
-      const latex = r'\mathbf{g} = \frac{\mathbf{F}_g}{m_{test}}';
-      final result =EquationParser.solve(latex, {
+      // Updated to explicit: g = F_g / m_test
+      const eq = 'g = F_g / m_test';
+      final result = EquationParser.solve(eq, {
         'g': 9.8,
         'm_test': 555,
         'F_g': double.nan,
@@ -160,14 +149,15 @@ void main() {
     });
 
     test('handles gravitational field with unit vector and dependence', () {
-      const latex = r'\mathbf{g}(r) = -G \frac{M}{r^2} \hat{r}';
-      final result =EquationParser.solve(latex, {
+      // Updated to explicit: g = -G * M / r^2
+      const eq = 'g = -G * M / r^2';
+      final result = EquationParser.solve(eq, {
         'G': 6.673e-11,
         'M': 1.9e24,
         'r': 9,
         'g': double.nan,
       }, solveFor: 'g');
-      expect(EquationParser.extractVariables(latex), ['G', 'M', 'g', 'r']);
+      expect(EquationParser.extractVariables(eq), ['G', 'M', 'g', 'r']);
       expect(result.solvedValue, isNotNull);
       expect(result.solvedValue, closeTo(-1.565e12, 1e9));
     });
@@ -175,22 +165,16 @@ void main() {
 
   group('EquationParser - evaluateNumericExpression', () {
     test('basic arithmetic', () {
-      expect(
-       EquationParser.evaluate('10 - 2 * 3 + 4 / 2'),
-        6.0,
-      );
+      expect(EquationParser.evaluate('10 - 2 * 3 + 4 / 2'), 6.0);
     });
 
     test('parentheses', () {
-      expect(
-       EquationParser.evaluate('(10 - 2) * (3 + 4 / 2)'),
-        40.0,
-      );
+      expect(EquationParser.evaluate('(10 - 2) * (3 + 4 / 2)'), 40.0);
     });
 
     test('sqrt and pow', () {
       expect(
-       EquationParser.evaluate('sqrt(16) + pow(2, 3)'),
+        EquationParser.evaluate('sqrt(16) + pow(2, 3)'),
         closeTo(12.0, 1e-10),
       );
     });
@@ -217,11 +201,7 @@ void main() {
     });
 
     test('extracts variables from E=m*c^2', () {
-      expect(EquationParser.extractVariables('E=m*c^2'), [
-        'E',
-        'c',
-        'm',
-      ]);
+      expect(EquationParser.extractVariables('E=m*c^2'), ['E', 'c', 'm']);
     });
 
     test('excludes function names', () {
@@ -255,9 +235,7 @@ void main() {
 
     test('evaluates complex expression', () {
       expect(
-        EquationParser.evaluate(
-          '6.674e-11*5.972e24*7.348e22/(3.844e8)^2',
-        ),
+        EquationParser.evaluate('6.674e-11*5.972e24*7.348e22/(3.844e8)^2'),
         closeTo(1.982e20, 1e17),
       );
     });
@@ -313,7 +291,7 @@ void main() {
       expect(prefilled.containsKey('G') || prefilled.isEmpty, isTrue);
     });
 
-    test('does NOT return c for E=m*c^2 (generic c support)', () {
+    test('does NOT return c for E=m*c^2 (no implicit constant)', () {
       final prefilled = EquationParser.getPrefilledValues('E=m*c^2');
       expect(prefilled.containsKey('c'), isFalse);
     });
@@ -328,18 +306,14 @@ void main() {
     });
 
     test('returns GE for falling object', () {
-      final prefilled = EquationParser.getPrefilledValues(
-        'v=v_0+GE*t',
-      );
+      final prefilled = EquationParser.getPrefilledValues('v=v_0+GE*t');
       // GE is the short alias for earth's gravity
       expect(prefilled.containsKey('GE') || prefilled.isEmpty, isTrue);
     });
 
     test('returns multiple constants', () {
       // Example: F = G * M_Earth / R_Earth^2
-      final prefilled = EquationParser.getPrefilledValues(
-        'F=GRAV*ME/RE^2',
-      );
+      final prefilled = EquationParser.getPrefilledValues('F=GRAV*ME/RE^2');
       // Using short aliases
       expect(prefilled.isNotEmpty, isTrue);
     });

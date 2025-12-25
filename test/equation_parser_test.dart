@@ -13,14 +13,20 @@ void main() {
       });
 
       test('filters out math constants', () {
-        final vars = EquationParser.extractVariables('y=PI*r^2');
+        final vars = EquationParser.extractVariables(
+          'y=PI*r^2',
+          excludeConstants: true,
+        );
         expect(vars, contains('y'));
         expect(vars, contains('r'));
         expect(vars, isNot(contains('PI')));
       });
 
       test('filters out imaginary unit', () {
-        final vars = EquationParser.extractVariables('z=x+i*y');
+        final vars = EquationParser.extractVariables(
+          'z=x+i*y',
+          excludeConstants: true,
+        );
         expect(vars, containsAll(['z', 'x', 'y']));
         expect(vars, isNot(contains('i')));
       });

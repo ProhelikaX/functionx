@@ -55,7 +55,7 @@ library functionx;
 // ═══════════════════════════════════════════════════════════════════════════
 
 export 'src/equation_parser.dart'
-    show EquationParser, EquationResult, SolutionStep, PhysicsConstant;
+    show EquationParser, EquationResult, SolutionStep;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CORE COMPONENTS

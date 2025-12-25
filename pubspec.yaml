@@ -3,7 +3,7 @@ description: >-
   A powerful equation parser and solver for Dart.
   Parse expressions, extract variables, evaluate, solve equations,
   and perform symbolic calculus with a comprehensive physics constants library.
-version: 1.1.0
+version: 1.2.0
 license: MIT
 homepage: https://github.com/prohelikax/simulated_learning_assistants/tree/main/packages/functionx
 repository: https://github.com/prohelikax/simulated_learning_assistants
