@@ -57,9 +57,9 @@ class ExpressionGrammar extends GrammarDefinition {
   Parser multiplicative() =>
       (ref0(power) &
               (((char('*').trim() | char('/').trim()) & ref0(power)) |
-                      ref0(power)
-                          .trim() // Implicit multiplication (handles whitespace)
-                          )
+                      (char('-').trim().not() & ref0(power).trim()).map(
+                        (v) => v[1],
+                      ))
                   .star())
           .map((values) {
             math.Expression left = values[0];

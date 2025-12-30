@@ -60,15 +60,13 @@ void main() {
     });
 
     test('Evaluates sqrt(-4) as 2i', () {
-      final res =EquationParser.evaluate('sqrt(-4)');
+      final res = EquationParser.evaluate('sqrt(-4)');
       expect(res, isA<Complex>());
       expect((res as Complex).imaginary, closeTo(2.0, 1e-10));
     });
 
     test('Evaluates with variable values', () {
-      final res =EquationParser.evaluate('sqrt(x)', {
-        'x': -9.0,
-      });
+      final res = EquationParser.evaluate('sqrt(x)', {'x': -9.0});
       expect(res, isA<Complex>());
       expect((res as Complex).imaginary, closeTo(3.0, 1e-10));
     });

@@ -65,6 +65,7 @@ export 'src/core/grammar.dart' show ExpressionGrammar;
 export 'src/core/parser.dart' show ExpressionParser, ParseResult;
 export 'src/core/evaluator.dart' show Evaluator;
 export 'src/core/solver.dart' show Solver, SolveResult;
+export 'src/core/system_solver.dart' show SystemSolver, SystemSolveResult;
 export 'src/core/constants.dart' show Constants, Constant;
 export 'src/core/complex.dart' show Complex;
 export 'src/core/complex_evaluator.dart' show ComplexEvaluator;

@@ -1,14 +1,12 @@
 name: functionx
 description: >-
   A powerful equation parser and solver for Dart.
-  Parse expressions, extract variables, evaluate, solve equations,
-  and perform symbolic calculus with a comprehensive physics constants library.
-version: 1.2.0
+version: 1.3.0
 license: MIT
-homepage: https://github.com/prohelikax/simulated_learning_assistants/tree/main/packages/functionx
-repository: https://github.com/prohelikax/simulated_learning_assistants
-issue_tracker: https://github.com/prohelikax/simulated_learning_assistants/issues
-documentation: https://github.com/prohelikax/simulated_learning_assistants/blob/main/packages/functionx/README.md
+homepage: https://prohelika.org
+repository: https://github.com/prohelikax/functionx
+issue_tracker: https://github.com/prohelikax/functionx/issues
+documentation: https://github.com/prohelikax/functionx#readme
 
 environment:
   sdk: ^3.10.4
