@@ -22,7 +22,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  functionx: ^1.3.1
+  functionx: ^2.0.0
 ```
 
 ## Quick Start

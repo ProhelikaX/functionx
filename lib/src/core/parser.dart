@@ -115,7 +115,9 @@ class ExpressionParser {
         try {
           final args = (node as dynamic).args;
           if (args is List && args.isNotEmpty) {
-            for (var a in args) collect(a);
+            for (var a in args) {
+              collect(a);
+            }
             // Don't return!
           }
         } catch (_) {}
@@ -164,7 +166,9 @@ class ExpressionParser {
       final value = result.value;
       if (value is List) {
         collect(value[0]);
-        if (value.length > 2) collect(value[2]);
+        if (value.length > 2) {
+          collect(value[2]);
+        }
       } else {
         collect(value);
       }

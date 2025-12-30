@@ -1,7 +1,7 @@
 import 'package:math_expressions/math_expressions.dart';
 
 class CasParser {
-  static final Parser _parser = Parser();
+  static final GrammarParser _parser = GrammarParser();
 
   /// Evaluates specific CAS commands like derivative and integral.
   /// Returns the LaTeX result or the simplified expression string.
@@ -92,7 +92,7 @@ class CasParser {
             exp.second is Number) {
           double n = (exp.second as Number).value.toDouble();
           if (n == -1) return 'ln($variable)';
-          return '(${variable}^${n + 1})/${n + 1}';
+          return '($variable^${n + 1})/${n + 1}';
         }
       }
 

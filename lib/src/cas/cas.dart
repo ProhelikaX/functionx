@@ -18,7 +18,7 @@ import 'package:math_expressions/math_expressions.dart';
 /// print(result); // '0.5*x^2'
 /// ```
 class Cas {
-  static final Parser _parser = Parser();
+  static final GrammarParser _parser = GrammarParser();
 
   /// Computes the symbolic derivative of an expression.
   ///

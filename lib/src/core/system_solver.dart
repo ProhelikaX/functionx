@@ -1,5 +1,5 @@
 import 'dart:math' as math;
-import 'package:math_expressions/math_expressions.dart';
+import 'package:math_expressions/math_expressions.dart' hide ExpressionParser;
 import 'complex.dart';
 import 'complex_evaluator.dart';
 import 'parser.dart';

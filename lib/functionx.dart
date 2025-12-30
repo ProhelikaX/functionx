@@ -5,6 +5,7 @@
 /// - Extracting variables from expressions
 /// - Evaluating expressions with variable substitution
 /// - Solving equations (algebraically and numerically)
+/// - Solving systems of equations (linear and non-linear)
 /// - Complex number support
 /// - Physics constants
 /// - Symbolic calculus (differentiation and integration)
@@ -30,6 +31,10 @@
 /// final solution = EquationParser.solve('F = m*a', {'F': 10.0, 'm': 2.0}, solveFor: 'a');
 /// print(solution.solvedValue); // 5.0
 ///
+/// // Solve system of equations
+/// final system = SystemSolver.solve(['x + y = 3', 'x - y = 1']);
+/// print(system.values); // {x: 2.0, y: 1.0}
+///
 /// // Symbolic differentiation
 /// final derivative = Cas.differentiate('x^2', 'x');
 /// print(derivative); // '2.0 * x'
@@ -37,10 +42,10 @@
 ///
 /// ## Expression Syntax
 ///
-/// This parser supports both **explicit** and **implicit** operator notation:
+/// This parser requires **explicit** operator notation:
 /// - ✅ `2*x + 3` (explicit)
-/// - ✅ `2x + 3` (implicit multiplication supported)
-/// - ✅ `3(x+1)` or `(x+1)(x-1)` (parentheses shorthand)
+/// - ❌ `2x + 3` (implicit multiplication NOT supported)
+/// - ❌ `3(x+1)` (implicit multiplication NOT supported)
 ///
 /// Supported operators: `+`, `-`, `*`, `/`, `^`
 ///
@@ -48,7 +53,7 @@
 /// `sqrt`, `abs`, `log`, `ln`, `exp`, `pow`
 ///
 /// Mathematical constants: `PI`, `EN` (Euler's number), `IN` (imaginary unit), `INF`
-library functionx;
+library;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PRIMARY API - Unified Equation Parser

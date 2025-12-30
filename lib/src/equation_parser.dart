@@ -912,8 +912,9 @@ class EquationParser {
       final f1 = _evaluateWithValue(expr, variable, 1.0);
       final fm1 = _evaluateWithValue(expr, variable, -1.0);
 
-      if (!_isValidValue(f0) || !_isValidValue(f1) || !_isValidValue(fm1))
+      if (!_isValidValue(f0) || !_isValidValue(f1) || !_isValidValue(fm1)) {
         return null;
+      }
 
       // Convert to doubles for coefficient extraction
       double c = _toDouble(f0);
@@ -985,15 +986,16 @@ class EquationParser {
       final right = _evaluateWithValue(rightExpr, variable, x);
 
       double l = 0, r = 0;
-      if (left is num)
+      if (left is num) {
         l = left.toDouble();
-      else if (left is Complex)
+      } else if (left is Complex) {
         l = left.real;
-      if (right is num)
+      }
+      if (right is num) {
         r = right.toDouble();
-      else if (right is Complex)
+      } else if (right is Complex) {
         r = right.real;
-
+      }
       return l - r;
     }
 

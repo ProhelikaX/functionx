@@ -56,23 +56,15 @@ class ExpressionGrammar extends GrammarDefinition {
   /// Handles multiplication and division (left-associative).
   Parser multiplicative() =>
       (ref0(power) &
-              (((char('*').trim() | char('/').trim()) & ref0(power)) |
-                      (char('-').trim().not() & ref0(power).trim()).map(
-                        (v) => v[1],
-                      ))
-                  .star())
+              ((char('*').trim() | char('/').trim()) & ref0(power)).star())
           .map((values) {
             math.Expression left = values[0];
             final rest = values[1] as List;
             for (final item in rest) {
-              if (item is List && item.length == 2 && item[0] is String) {
-                final op = item[0] as String;
-                final right = item[1] as math.Expression;
-                if (op == '*') left = math.Times(left, right);
-                if (op == '/') left = math.Divide(left, right);
-              } else if (item is math.Expression) {
-                left = math.Times(left, item);
-              }
+              final op = item[0] as String;
+              final right = item[1] as math.Expression;
+              if (op == '*') left = math.Times(left, right);
+              if (op == '/') left = math.Divide(left, right);
             }
             return left;
           });

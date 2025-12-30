@@ -87,7 +87,7 @@ class Complex {
     if (exponent is Complex) {
       if (real == 0 && imaginary == 0) return Complex.zero;
       // a^b = exp(b * log(a))
-      return (exponent * this.log()).exp();
+      return (exponent * log()).exp();
     }
     throw ArgumentError('Invalid exponent type');
   }

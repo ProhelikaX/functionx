@@ -58,6 +58,8 @@ class Evaluator {
       }
     }
 
+    // Use Expression.evaluate with ignore as RealEvaluator API is not fully clear/compatible in this version
+    // ignore: deprecated_member_use
     final result = parsed.evaluate(EvaluationType.REAL, context);
     return result.toDouble();
   }

@@ -30,7 +30,9 @@ class ExplicitEquationParser {
       visited.add(node);
 
       if (node is List) {
-        for (final item in node) collect(item);
+        for (final item in node) {
+          collect(item);
+        }
         return;
       }
 
@@ -49,7 +51,9 @@ class ExplicitEquationParser {
       try {
         final args = (node as dynamic).args;
         if (args is List && args.isNotEmpty) {
-          for (var a in args) collect(a);
+          for (var a in args) {
+            collect(a);
+          }
           // Don't return, allow fallbacks
         }
       } catch (_) {}
