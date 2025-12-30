@@ -11,7 +11,8 @@ A powerful equation parser and solver for Dart — f(x) for your code.
 - 📊 **Variable Extraction** - Intelligently extract variables while filtering constants
 - 🔢 **Expression Evaluation** - Multi-mode evaluation (Real, Complex, and Mixed)
 - ⚡ **Equation Solving** - High-precision algebraic and numerical solvers
-- 📈 **Symbolic Calculus** - Fast differentiation and integration
+- � **System Solver** - Solve systems of non-linear equations (Real & Complex)
+- �📈 **Symbolic Calculus** - Fast differentiation and integration
 - 🔬 **Auto-resolve Constants** - Automatic identification of symbols like $c$, $h$, and $k_B$
 - 🇬🇷 **LaTeX Support** - Seamless parsing of Greek letters and complex subscripts
 
@@ -21,7 +22,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  functionx: ^1.2.0
+  functionx: ^1.3.1
 ```
 
 ## Quick Start
@@ -45,6 +46,13 @@ void main() {
     solveFor: 'a',
   );
   print(solution.value); // 5.0
+
+  // Solve a system of equations
+  final system = SystemSolver.solve([
+    'x^2 + y^2 = 1',
+    'y = x'
+  ]);
+  print(system.values); // {x: 0.707..., y: 0.707...}
 
   // Use physical constants
   final c = Constants.speedOfLight;

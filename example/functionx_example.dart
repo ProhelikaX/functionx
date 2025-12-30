@@ -70,4 +70,31 @@ void main() {
   print('Variables: $complexVars');
   final keResult = Evaluator.evaluate('0.5*m*v^2', {'m': 10, 'v': 5});
   print('With m=10, v=5: KE = $keResult');
+  print('');
+
+  // 9. System of Equations
+  print('9. System of Equations');
+  print('-' * 40);
+  final systemResult = SystemSolver.solve(
+    ['x^2 + y^2 = 1', 'y = x'],
+    initialGuess: {'x': 0.5, 'y': 0.5},
+  );
+
+  print('System:');
+  print('  x^2 + y^2 = 1');
+  print('  y = x');
+  if (systemResult.success) {
+    print('Solution:');
+    systemResult.values.forEach((k, v) {
+      if (v.isReal) {
+        print('  $k = ${v.real.toStringAsFixed(4)}');
+      } else {
+        print(
+          '  $k = ${v.real.toStringAsFixed(4)} + ${v.imaginary.toStringAsFixed(4)}i',
+        );
+      }
+    });
+  } else {
+    print('Failed: ${systemResult.error}');
+  }
 }
